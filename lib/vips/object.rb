@@ -72,7 +72,7 @@ module Vips
         result = handler.call(p, len)
       rescue Exception => e
         puts "read: #{e}"
-        result = 0
+        result = -1
       end
 
       result
@@ -98,7 +98,7 @@ module Vips
         result = handler.call(p, len)
       rescue Exception => e
         puts "write: #{e}"
-        result = 0
+        result = -1
       end
 
       result

@@ -124,6 +124,22 @@ RSpec.describe Vips::SourceCustom, version: [8, 9] do
     expect(image.avg).to be_within(0.001).of(109.789)
   end
 
+  it "fails when on_read raises" do
+    data = File.binread simg("coffee.gif")
+    file = StringIO.new data
+    cutoff = data.bytesize / 10
+    source = Vips::SourceCustom.new
+    source.on_read do |length|
+      raise IOError, "connection reset" if file.pos >= cutoff
+      file.read [length, cutoff - file.pos].min
+    end
+
+    expect {
+      image = Vips::Image.new_from_source source, "", access: :sequential
+      image.avg
+    }.to raise_error(Vips::Error)
+  end
+
   it "on_seek is optional" do
     file = File.open simg("wagon.jpg"), "rb"
     source = Vips::SourceCustom.new
