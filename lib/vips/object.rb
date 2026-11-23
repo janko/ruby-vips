@@ -71,7 +71,7 @@ module Vips
       begin
         result = handler.call(p, len)
       rescue Exception => e
-        puts "read: #{e}"
+        warn "read: #{e}"
         result = 0
       end
 
@@ -84,7 +84,7 @@ module Vips
       begin
         result = handler.call(off, whence)
       rescue Exception => e
-        puts "seek: #{e}"
+        warn "seek: #{e}"
         result = -1
       end
 
@@ -97,7 +97,7 @@ module Vips
       begin
         result = handler.call(p, len)
       rescue Exception => e
-        puts "write: #{e}"
+        warn "write: #{e}"
         result = 0
       end
 

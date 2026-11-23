@@ -142,6 +142,15 @@ RSpec.describe Vips::SourceCustom, version: [8, 9] do
 
     expect(target)
   end
+
+  it "prints exceptions raised in on_read to stderr" do
+    source = Vips::SourceCustom.new
+    source.on_read { |length| raise IOError, "connection reset" }
+
+    expect {
+      Vips::Image.new_from_source source, ""
+    }.to raise_error(Vips::Error).and output(/read: connection reset/).to_stderr
+  end
 end
 
 # 8.13 had a broken on_finish, so close ourselves before 8.14
